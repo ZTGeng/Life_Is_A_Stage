@@ -10,6 +10,10 @@ public class GameRunning : MonoBehaviour {
 	private readonly static int LAMP = 0;
 	private readonly static int SWORD = 1;
 	private readonly static int CHAIR = 2;
+	private static string[] colors = {"red", "green", "blue"};
+	private static string[] keys = {"W", "A", "D"};
+	private static string[] objects = {"lamp", "sword", "chair"};
+	private static string[] arrows = {"up", "left", "right"};
 	
 	private int gameState = 0;
 	private bool isWin = false;
@@ -17,6 +21,7 @@ public class GameRunning : MonoBehaviour {
 	private float countDownStamp = 0.0F;
 	private int currentSec = 3;
 	private int actionFrame = 1;
+	private int audienceFrame = 1;
 	
 	private int w, a, d, up, left, right;
 	private int pill, action;
@@ -27,8 +32,7 @@ public class GameRunning : MonoBehaviour {
 	private float timeStamp = 0.0F;
 	
 	void Start() {
-		SetKeysEasy ();
-		reset ();
+		reset (true);
 	}
 	
 	void Update() {
@@ -85,6 +89,7 @@ public class GameRunning : MonoBehaviour {
 			} else {
 				Debug.Log("First count down end");
 				gameState = 1;
+				showTarget();
 				showCountDown(3);
 				currentSec = 3;
 				countDownStamp = Time.time;
@@ -134,15 +139,23 @@ public class GameRunning : MonoBehaviour {
 		
 	}
 	
-	private void reset() {
+	private void reset(bool isEasy) {
+		if (isEasy)
+			SetKeysEasy ();
+		else
+			SetKeys ();
+		hideKeys ();
+		showKeys ();
+		hideTarget ();
 		isWin = false;
-		pill = Random.Range (0, 3);
-		action = Random.Range (0, 3);
+		pill = 1;//Random.Range (0, 3);
+		action = 1;//Random.Range (0, 3);
 		choice1 = -1;
 		choice2 = -1;
 		currentSec = 3;
 		showCountDown (3);
 		actionFrame = 1;
+		audienceFrame = 1;
 		countDownStamp = Time.time;
 		timeStamp = Time.time;
 	}
@@ -162,16 +175,46 @@ public class GameRunning : MonoBehaviour {
 		w = RED; a = GREEN; d = BLUE;
 		up = LAMP; left = SWORD; right = CHAIR;
 	}
+
+	private void showKeys() {
+		showThing (colors [w] + " pill W");
+		showThing (colors [a] + " pill A");
+		showThing (colors [d] + " pill D");
+		showThing (objects[up] + " up");
+		showThing (objects[left] + " left");
+		showThing (objects[right] + " right");
+	}
+	private void hideKeys() {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				hideThing (colors[i] + " pill " + keys[j]);
+				hideThing (objects[i] + " " + arrows[j]);
+			}
+		}
+	}
+
+	private void showTarget() {
+		showThing (colors[pill] + " target");
+		showThing (objects[action] + " target");
+	}
+	private void hideTarget() {
+		for (int i = 0; i < 3; i++) {
+			hideThing (colors[i] + " target");
+			hideThing (objects[i] + " target");
+		}
+	}
 	
 	private void CheckWin() {
 		if (choice1 == pill && choice2 == action) {
 			// win
 			Debug.Log("Win this round");
 			isWin = true;
+			AdjustBar(1);
 		} else {
 			// lose
 			Debug.Log("Lose this round");
 			isWin = false;
+			AdjustBar(-1);
 		}
 	}
 	
@@ -232,17 +275,67 @@ public class GameRunning : MonoBehaviour {
 	}
 
 	private void TogglePillmanAction(int action) {
-	
+		string name;
+		if (action == LAMP) {
+			name = "pillman lamp";
+		} else if (action == SWORD) {
+			name = "pillman sword";
+		} else if (action == CHAIR) {
+			name = "pillman chair";
+		} else {
+			return;
+		}
+
+		if (actionFrame == 1) {
+			hideThing (name + 1);
+			showThing (name + 2);
+			actionFrame = 2;
+		} else if (actionFrame == 2) {
+			hideThing (name + 2);
+			showThing (name + 3);
+			actionFrame = 3;
+		} else if (actionFrame == 3) {
+			hideThing (name + 3);
+			showThing (name + 2);
+			actionFrame = 4;
+		} else if (actionFrame == 4) {
+			hideThing (name + 2);
+			showThing (name + 1);
+			actionFrame = 1;
+		} else {
+			return;
+		}
 	}
 	
 	private void showPillmanAction(int action) {
-		Vector3 v = GameObject.Find(name).transform.localPosition;
-		v.z = 0.0F;
-		GameObject.Find(name).transform.localPosition = v;
+		string name;
+		if (action == LAMP) {
+			name = "pillman lamp";
+		} else if (action == SWORD) {
+			name = "pillman sword";
+		} else if (action == CHAIR) {
+			name = "pillman chair";
+		} else {
+			return;
+		}
+		actionFrame = 1;
+		showThing (name + 1);
 	}
-	private void showPillmanLamp(int action) {
-		timeStamp = Time.time;
-		
+	private void hidePillmanAction(int action) {
+		string name;
+		if (action == LAMP) {
+			name = "pillman lamp";
+		} else if (action == SWORD) {
+			name = "pillman sword";
+		} else if (action == CHAIR) {
+			name = "pillman chair";
+		} else {
+			return;
+		}
+		if (actionFrame == 4)
+			hideThing (name + 2);
+		else
+			hideThing (name + actionFrame);
 	}
 
 	private void ToggleAudience() {
