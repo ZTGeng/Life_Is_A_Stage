@@ -136,6 +136,14 @@ public class GameRunning : MonoBehaviour {
 				gameState = 4;
 			}
 		}
+		if (gameState == 4) {
+			// emotion anim
+			hidePillmanAction(1);
+			hidePillmanAction(2);
+			hidePillmanAction(3);
+			showPillmanIdle();
+			reset (true);
+		}
 		
 	}
 	
@@ -158,6 +166,7 @@ public class GameRunning : MonoBehaviour {
 		audienceFrame = 1;
 		countDownStamp = Time.time;
 		timeStamp = Time.time;
+		gameState = 0;
 	}
 	
 	private void SetKeys() {
@@ -275,6 +284,7 @@ public class GameRunning : MonoBehaviour {
 	}
 
 	private void TogglePillmanAction(int action) {
+
 		string name;
 		if (action == LAMP) {
 			name = "pillman lamp";
@@ -339,6 +349,10 @@ public class GameRunning : MonoBehaviour {
 	}
 
 	private void ToggleAudience() {
+		audienceFrame ++;
+		if (audienceFrame >= 8) {
+			gameState = 4;
+		}
 
 	}
 
