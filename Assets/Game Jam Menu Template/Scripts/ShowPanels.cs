@@ -8,6 +8,8 @@ public class ShowPanels : MonoBehaviour {
 	public GameObject menuPanel;							//Store a reference to the Game Object MenuPanel 
 	public GameObject pausePanel;							//Store a reference to the Game Object PausePanel 
 
+	public GameObject creditPanel;
+
 
 	//Call this function to activate and display the Options panel during the main menu
 	public void ShowOptionsPanel()
@@ -48,5 +50,15 @@ public class ShowPanels : MonoBehaviour {
 		pausePanel.SetActive (false);
 		optionsTint.SetActive(false);
 
+	}
+
+	public void ShowCreditPanel() {
+		Debug.Log ("Show Credit Panel");
+		creditPanel.SetActive (true);
+	}
+
+	public void HideCreditPanel() {
+		Debug.Log ("Hide Credit Panel");
+		creditPanel.SetActive (false);
 	}
 }
