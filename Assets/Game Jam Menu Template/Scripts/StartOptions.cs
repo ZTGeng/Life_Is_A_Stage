@@ -24,6 +24,13 @@ public class StartOptions : MonoBehaviour {
 	private float fastFadeIn = .01f;									//Very short fade time (10 milliseconds) to start playing music immediately without a click/glitch
 	private ShowPanels showPanels;										//Reference to ShowPanels script on UI GameObject, to show and hide panels
 
+	private int moveCurtain = 0;
+	private Transform leftCurtain;
+	private Transform rightCurtain;
+	private Vector3 leftCurtainTarget;
+	private Vector3 rightCurtainTarget;
+	private readonly static float target = 8.5F;
+	private readonly static float speed = 8.0F;
 	
 	void Awake()
 	{
@@ -32,11 +39,34 @@ public class StartOptions : MonoBehaviour {
 
 		//Get a reference to PlayMusic attached to UI object
 		playMusic = GetComponent<PlayMusic> ();
+
+		leftCurtain  = GameObject.Find("left curtain").transform;
+		rightCurtain = GameObject.Find("right curtain").transform;
+		leftCurtainTarget  = leftCurtain.transform.position;
+		rightCurtainTarget = rightCurtain.transform.position;
+		leftCurtainTarget.x  = -target;
+		rightCurtainTarget.x = target;
+	}
+
+	void Update() {
+		if (moveCurtain == 1) {
+			leftCurtain.position  = Vector3.MoveTowards(leftCurtain.position,  leftCurtainTarget,  speed * Time.deltaTime);
+			rightCurtain.position = Vector3.MoveTowards(rightCurtain.position, rightCurtainTarget, speed * Time.deltaTime);
+			if (rightCurtain.position.x == target) {
+				moveCurtain = 0;
+				GameStart();
+			}
+		}
 	}
 
 
 	public void StartButtonClicked()
 	{
+		moveCurtain = 1;
+	}
+
+	private void GameStart() {
+
 		//If changeMusicOnStart is true, fade out volume of music group of AudioMixer by calling FadeDown function of PlayMusic, using length of fadeColorAnimationClip as time. 
 		//To change fade time, change length of animation "FadeToColor"
 		if (changeMusicOnStart) 
