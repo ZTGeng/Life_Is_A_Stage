@@ -22,6 +22,7 @@ public class GameRunning : MonoBehaviour {
 	private int currentSec = 3;
 	private int actionFrame = 1;
 	private int audienceFrame = 1;
+	private int emotionFrame = 1;
 	
 	private int w, a, d, up, left, right;
 	private int pill, action;
@@ -133,14 +134,24 @@ public class GameRunning : MonoBehaviour {
 					// check when to go to state 4
 				}
 			} else {
+				audienceFrame = 1;
 				gameState = 4;
+				showEmotion();
 			}
 		}
+
 		if (gameState == 4) {
-			// emotion anim
-			hidePillmanAction(1);
-			hidePillmanAction(2);
-			hidePillmanAction(3);
+			hidePillmanAction(LAMP);
+			hidePillmanAction(SWORD);
+			hidePillmanAction(CHAIR);
+
+			ToggleEmotion();
+			ToggleAudience();
+			gameState = 5;
+		}
+
+		if (gameState == 5) {
+			hideEmotion();
 			showPillmanIdle();
 			reset (true);
 		}
@@ -156,14 +167,15 @@ public class GameRunning : MonoBehaviour {
 		showKeys ();
 		hideTarget ();
 		isWin = false;
-		pill = 1;//Random.Range (0, 3);
-		action = 1;//Random.Range (0, 3);
+		pill = Random.Range (0, 3);
+		action = Random.Range (0, 3);
 		choice1 = -1;
 		choice2 = -1;
 		currentSec = 3;
 		showCountDown (3);
 		actionFrame = 1;
 		audienceFrame = 1;
+		emotionFrame = 1;
 		countDownStamp = Time.time;
 		timeStamp = Time.time;
 		gameState = 0;
@@ -351,7 +363,7 @@ public class GameRunning : MonoBehaviour {
 	private void ToggleAudience() {
 		audienceFrame ++;
 		if (audienceFrame >= 8) {
-			gameState = 4;
+			gameState++;
 		}
 
 	}
@@ -361,9 +373,55 @@ public class GameRunning : MonoBehaviour {
 		showThing ("timer countdown" + sec);
 	}
 
-
-
-
+	private void showEmotion() {
+		Debug.Log ("show emotion");
+		if (isWin)
+			showThing ("victory1");
+		else
+			showThing ("failure1");
+	}
+	private void ToggleEmotion() {
+		Debug.Log ("toggle emotion");
+		string name;
+		if (isWin) {
+			name = "victory";
+		} else {
+			name = "failure";
+		}
+		if (emotionFrame == 1) {
+			hideThing (name + 1);
+			showThing (name + 2);
+			emotionFrame = 2;
+		} else if (emotionFrame == 2) {
+			hideThing (name + 2);
+			showThing (name + 3);
+			emotionFrame = 3;
+		} else if (emotionFrame == 3) {
+			hideThing (name + 3);
+			showThing (name + 2);
+			emotionFrame = 4;
+		} else if (emotionFrame == 4) {
+			hideThing (name + 2);
+			showThing (name + 1);
+			emotionFrame = 1;
+		} else {
+			return;
+		}
+	}
+	private void hideEmotion() {
+		Debug.Log ("hide emotion");
+		string name;
+		if (isWin) {
+			name = "victory";
+		} else {
+			name = "failure";
+		}
+		if (emotionFrame == 4)
+			hideThing (name + 2);
+		else
+			hideThing (name + emotionFrame);
+	}
+	
 
 
 	private void showThing(string name) {

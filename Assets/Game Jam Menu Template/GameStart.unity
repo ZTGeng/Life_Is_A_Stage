@@ -700,7 +700,7 @@ GameObject:
   - 4: {fileID: 144378223}
   - 212: {fileID: 144378224}
   m_Layer: 0
-  m_Name: pillman failure1
+  m_Name: failure1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2132,7 +2132,7 @@ GameObject:
   - 4: {fileID: 938422844}
   - 212: {fileID: 938422845}
   m_Layer: 0
-  m_Name: pillman failure2
+  m_Name: failure2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3251,7 +3251,7 @@ GameObject:
   - 4: {fileID: 1372204023}
   - 212: {fileID: 1372204024}
   m_Layer: 0
-  m_Name: pillman failure3
+  m_Name: failure3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
